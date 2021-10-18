@@ -21,6 +21,7 @@ TARGET_APPEND_SRC(
 TARGET_APPEND_HDR(
 	GUI
 	"libudph/GUI/Application.h"
+	"libudph/GUI/ApplicationTypes.h"
 	"libudph/GUI/Window.h"
 )
 

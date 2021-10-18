@@ -2,11 +2,14 @@
 #include <concepts>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <libudph/Class/Event.h>
 #include <libudph/Class/Interface.h>
 #include <libudph/GUI/Window.h>
+#include <libudph/Math/udMath.h>
+#include <libudph/GUI/ApplicationTypes.h>
 
 #include "wx/app.h"
 #include "wx/wx.h"
@@ -14,59 +17,41 @@
 extern void udStartup();
 namespace UD::Application
 {
-using Arguments = std::vector<std::string>;
 class Application
     : public UD::Interface::Interface<Application,
                                       UD::Interface::SimpleModifiers>
 {
   friend class Application_wxWrapper;
 
-  Arguments                                                  _arguments = {};
-  std::vector<std::unique_ptr<UD::Application::GUI::Window>> _windows   = {};
+  Arguments _arguments = {};
+  std::unordered_map<ID, std::unique_ptr<UD::Application::GUI::Window>> _windows
+      = {};
 
-  auto arguments() -> Arguments&
-  {
-    return _arguments;
-  }
-  void InternalStartup(int argc, char** argv)
-  {
-    if (argc > 1)
-    {
-      _arguments.assign(argv + 1, argv + argc);
-    }
-    Startup();
-  }
-  void InternalSetup()
-  {
-    Setup();
-  }
-  void InternalMain()
-  {
-    Main();
-  }
-  void InternalTeardown()
-  {
-    Teardown();
-  }
-  void InternalShutdown()
-  {
-    Shutdown();
-  }
+  ID _next_id = 1;
+
+  auto arguments() -> Arguments&;
+  void InternalStartup(int argc, char** argv);
+  void InternalSetup();
+  void InternalMain();
+  void InternalTeardown();
+  void InternalShutdown();
 
  protected:
-  virtual void Startup() {}
-  virtual void Setup() {}
-  virtual void Main() {}
-  virtual void Teardown() {}
-  virtual void Shutdown() {}
+  virtual void Startup();
+  virtual void Setup();
+  virtual void Main();
+  virtual void Teardown();
+  virtual void Shutdown();
 
  public:
   template<std::derived_from<UD::Application::GUI::Window> T, class... Args>
   auto Create(Args... args) -> T&
   {
     _windows.push_back(std::make_unique<T>(args...));
-    return **_windows.rbegin();
+    auto& w = **_windows.rbegin();
+    return w;
   }
+  auto GetNextID() -> ID;
 };
 class Application_wxWrapper
     : public UD::Interface::Interface<Application,
@@ -75,23 +60,11 @@ class Application_wxWrapper
 {
   std::unique_ptr<Application> _application;
 
-  auto OnInit() -> bool override
-  {
-    udStartup();
-    if (!_application)
-    {
-      return false;
-    }
-    _application->InternalStartup(this->argc, this->argv);
-    return true;
-  }
+  auto OnInit() -> bool override;
 
  public:
-  Application_wxWrapper() : _application{nullptr} {}
-  auto application() -> Application&
-  {
-    return *_application;
-  }
+  Application_wxWrapper();
+  auto application() -> Application&;
   template<std::derived_from<Application> T>
   void InitApplication()
   {
@@ -110,8 +83,9 @@ void Set()
   wxGetApp().InitApplication<T>();
 }
 template<std::derived_from<Application> T>
-void Get()
+auto Get() -> T&
 {
-  dynamic_cast<T&>(wxGetApp().application());
+  return dynamic_cast<T&>(wxGetApp().application());
 }
+auto Get() -> Application&;
 }  // namespace UD::Application
