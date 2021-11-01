@@ -7,11 +7,9 @@
 
 #include <libudph/Class/Event.h>
 #include <libudph/Class/Interface.h>
-#include <libudph/Math/udMath.h>
 #include <libudph/GUI/ApplicationTypes.h>
 #include <libudph/GUI/Window.h>
-
-#include "wx/wx.h"
+#include <libudph/Math/udMath.h>
 
 #include "wx/app.h"
 
@@ -49,9 +47,10 @@ class Application
   template<std::derived_from<UD::Application::GUI::Window> T, class... Args>
   auto Create(Args... args) -> T&
   {
-    auto window = std::make_unique<T>(args...);
-    _windows.insert(window->id(), std::move(window));
-    return *window;
+    auto window            = std::make_unique<T>(args...);
+    auto& window_ref = *window;
+    _windows[window->id()] = std::move(window);
+    return window_ref;
   }
   auto GetNextID() -> ID;
 };
@@ -75,7 +74,7 @@ class Application_wxWrapper
 };
 }  // namespace UD::Application
 
-wxIMPLEMENT_APP(UD::Application::Application_wxWrapper);
+wxDECLARE_APP(UD::Application::Application_wxWrapper);
 
 namespace UD::Application
 {

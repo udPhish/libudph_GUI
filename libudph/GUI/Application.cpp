@@ -1,12 +1,12 @@
 #include <libudph/GUI/Application.h>
 
-namespace UD::Application
-{
-auto Application::arguments() -> Arguments&
+wxIMPLEMENT_APP(UD::Application::Application_wxWrapper);
+
+auto UD::Application::Application::arguments() -> Arguments&
 {
   return _arguments;
 }
-void Application::InternalStartup(int argc, char** argv)
+void UD::Application::Application::InternalStartup(int argc, char** argv)
 {
   if (argc > 1)
   {
@@ -14,36 +14,36 @@ void Application::InternalStartup(int argc, char** argv)
   }
   Startup();
 }
-void Application::InternalSetup()
+void UD::Application::Application::InternalSetup()
 {
   Setup();
 }
-void Application::InternalMain()
+void UD::Application::Application::InternalMain()
 {
   Main();
 }
-void Application::InternalTeardown()
+void UD::Application::Application::InternalTeardown()
 {
   Teardown();
 }
-void Application::InternalShutdown()
+void UD::Application::Application::InternalShutdown()
 {
   Shutdown();
 }
-void Application::Startup() {}
-void Application::Setup() {}
-void Application::Main() {}
-void Application::Teardown() {}
-void Application::Shutdown() {}
-auto Application::GetNextID() -> ID
+void UD::Application::Application::Startup() {}
+void UD::Application::Application::Setup() {}
+void UD::Application::Application::Main() {}
+void UD::Application::Application::Teardown() {}
+void UD::Application::Application::Shutdown() {}
+auto UD::Application::Application::GetNextID() -> ID
 {
   return _next_id++;
 }
-void Application::Run(int argc, char** argv)
+void UD::Application::Application::Run(int argc, char** argv)
 {
   InternalStartup(argc, argv);
 }
-auto Application_wxWrapper::OnInit() -> bool
+auto UD::Application::Application_wxWrapper::OnInit() -> bool
 {
   udStartup();
   if (!_application)
@@ -53,10 +53,11 @@ auto Application_wxWrapper::OnInit() -> bool
   _application->InternalStartup(this->argc, this->argv);
   return true;
 }
-Application_wxWrapper::Application_wxWrapper() : _application{nullptr} {}
-auto Application_wxWrapper::application() -> Application&
+UD::Application::Application_wxWrapper::Application_wxWrapper()
+    : _application{nullptr}
+{
+}
+auto UD::Application::Application_wxWrapper::application() -> Application&
 {
   return *_application;
 }
-
-}  // namespace UD::Application
