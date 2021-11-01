@@ -2,28 +2,28 @@
 
 #include <libudph/Class/Event.h>
 #include <libudph/Class/Interface.h>
-#include <libudph/Math/Tensor.h>
 #include <libudph/GUI/ApplicationTypes.h>
+#include <libudph/Math/Tensor.h>
 
 #include "wx/wx.h"
-
 
 namespace UD::Application::GUI
 {
 class Window
     : public UD::Interface::Interface<Window, UD::Interface::SimpleModifiers>
 {
-  wxFrame* _wx_frame = nullptr;
-  UD::Application::ID       _id       = 0;
+  wxFrame*            _wx_frame = nullptr;
+  ID _id       = 0;
 
   void OnExit(wxCommandEvent&)
   {
     _wx_frame->Close(true);
   }
+
  public:
-   using EventClose =UD::Event::Event<UD::Application::ID>;
-   EventClose close;
-   
+  using EventClose = UD::Event::Event<ID>;
+  EventClose close;
+
   Window(std::string                title,
          UD::Tensor::Vector<2, int> position,
          UD::Tensor::Vector<2, int> size)
@@ -32,12 +32,20 @@ class Window
                               title,
                               wxPoint(position.x(), position.y()),
                               wxSize(size.x(), size.y())))
+      , _id(UD::Application::Get<Application>().GetNextID())
   {
-    _wx_frame->Bind(wxEVT_COMMAND_MENU_SELECTED, &Window::OnExit, this, wxID_EXIT);
+    _wx_frame->Bind(wxEVT_COMMAND_MENU_SELECTED,
+                    &Window::OnExit,
+                    this,
+                    wxID_EXIT);
   }
   void Show()
   {
     _wx_frame->Show();
+  }
+  auto id() -> ID
+  {
+    return _id;
   }
 };
 }  // namespace UD::Application::GUI

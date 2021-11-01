@@ -7,12 +7,13 @@
 
 #include <libudph/Class/Event.h>
 #include <libudph/Class/Interface.h>
-#include <libudph/GUI/Window.h>
 #include <libudph/Math/udMath.h>
 #include <libudph/GUI/ApplicationTypes.h>
+#include <libudph/GUI/Window.h>
+
+#include "wx/wx.h"
 
 #include "wx/app.h"
-#include "wx/wx.h"
 
 extern void udStartup();
 namespace UD::Application
@@ -44,17 +45,18 @@ class Application
   virtual void Shutdown();
 
  public:
+  void Run(int argc, char** argv);
   template<std::derived_from<UD::Application::GUI::Window> T, class... Args>
   auto Create(Args... args) -> T&
   {
-    _windows.push_back(std::make_unique<T>(args...));
-    auto& w = **_windows.rbegin();
-    return w;
+    auto window = std::make_unique<T>(args...);
+    _windows.insert(window->id(), std::move(window));
+    return *window;
   }
   auto GetNextID() -> ID;
 };
 class Application_wxWrapper
-    : public UD::Interface::Interface<Application,
+    : public UD::Interface::Interface<Application_wxWrapper,
                                       UD::Pack::Pack<wxApp>,
                                       UD::Interface::SimpleModifiers>
 {
@@ -82,10 +84,9 @@ void Set()
 {
   wxGetApp().InitApplication<T>();
 }
-template<std::derived_from<Application> T>
+template<std::derived_from<Application> T = Application>
 auto Get() -> T&
 {
   return dynamic_cast<T&>(wxGetApp().application());
 }
-auto Get() -> Application&;
 }  // namespace UD::Application

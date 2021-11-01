@@ -1,4 +1,4 @@
-#include <libudph/GUI/Application.h>
+#include <libudph/GUI/Application_wxWrapper.h>
 
 namespace UD::Application
 {
@@ -39,10 +39,7 @@ auto Application::GetNextID() -> ID
 {
   return _next_id++;
 }
-void Application::Run(int argc, char** argv)
-{
-  InternalStartup(argc, argv);
-}
+
 auto Application_wxWrapper::OnInit() -> bool
 {
   udStartup();
