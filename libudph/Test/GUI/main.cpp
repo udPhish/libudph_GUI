@@ -1,25 +1,65 @@
-#include "libudph/GUI/Application.h"
-#include "libudph/GUI/Window.h"
-#include "libudph/Math/Tensor.h"
 
-class App : public UD::Application::Application
+#include <SDL.h>
+
+#include <stdio.h>
+const int SCREEN_WIDTH  = 640;
+const int SCREEN_HEIGHT = 480;
+
+//#include "libudph/GUI/Application.h"
+//#include "libudph/GUI/Window.h"
+//#include "libudph/Math/Tensor.h"
+
+
+//class App : public UD::Application::Application
+//{
+//  void Startup()
+//  {
+//    auto& w = App::Create<UD::Application::GUI::Window>(
+//        "test",
+//        UD::Tensor::Vector<2, int>(50, 50),
+//        UD::Tensor::Vector<2, int>(500, 500));
+//    w.Show();
+//    auto& w2 = App::Create<UD::Application::GUI::Window>(
+//        "tesst",
+//        UD::Tensor::Vector<2, int>(500, 50),
+//        UD::Tensor::Vector<2, int>(500, 500));
+//    w2.Show();
+//  }
+//};
+//
+//void udStartup()
+//{
+//  UD::Application::Set<App>();
+//}
+
+int main(int argc, char* args[])
 {
-  void Startup()
-  {
-    auto& w = App::Create<UD::Application::GUI::Window>(
-        "test",
-        UD::Tensor::Vector<2, int>(50, 50),
-        UD::Tensor::Vector<2, int>(500, 500));
-    w.Show();
-    auto& w2 = App::Create<UD::Application::GUI::Window>(
-        "tesst",
-        UD::Tensor::Vector<2, int>(500, 50),
-        UD::Tensor::Vector<2, int>(500, 500));
-    w2.Show();
+  SDL_Window*  window;
+  SDL_Surface* screenSurface;
+  if(SDL_Init(SDL_INIT_VIDEO) < 0){
+    printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
   }
-};
+  else
+  {
+    // Get window surface
+    screenSurface = SDL_GetWindowSurface(window);
 
-void udStartup()
-{
-  UD::Application::Set<App>();
+    // Fill the surface white
+    SDL_FillRect(screenSurface,
+                 NULL,
+                 SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
+
+    // Update the surface
+    SDL_UpdateWindowSurface(window);
+
+    // Wait two seconds
+    SDL_Delay(2000);
+  }
+  // Destroy window
+  SDL_DestroyWindow(window);
+
+  // Quit SDL subsystems
+  SDL_Quit();
+
+  return 0;
 }
