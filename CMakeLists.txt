@@ -10,6 +10,7 @@ PROJECT_SET_NAMESPACE(libudph_GUI libudph)
 PROJECT_LOAD_GIT_REPOSITORY(libudph_Class "https://github.com/udPhish/libudph_Class.git" dev)
 PROJECT_LOAD_GIT_REPOSITORY(libudph_Math "https://github.com/udPhish/libudph_Math.git" master)
 PROJECT_LOAD_GIT_REPOSITORY(wxwidgets "https://github.com/wxWidgets/wxWidgets.git" master)
+PROJECT_LOAD_GIT_REPOSITORY(SDL2 "https://github.com/libsdl-org/SDL.git" master)
 
 TARGET_CREATE_LIB(GUI STATIC)
 TARGET_APPEND_SRC(
@@ -29,6 +30,7 @@ TARGET_APPEND_DEP_PUBLIC(GUI libudph::Class)
 TARGET_APPEND_DEP_PUBLIC(GUI libudph::Math)
 TARGET_APPEND_DEP_PUBLIC(GUI wx::base)
 TARGET_APPEND_DEP_PUBLIC(GUI wx::core)
+TARGET_APPEND_DEP_PUBLIC(GUI SDL2::SDL2-static)
 
 TARGET_LINK(GUI)
 
