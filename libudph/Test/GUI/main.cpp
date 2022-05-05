@@ -1,25 +1,25 @@
-#include <SDL.h>
+//#include <SDL.h>
 #include <iostream>
 
 #include <stdio.h>
 const int SCREEN_WIDTH  = 640;
 const int SCREEN_HEIGHT = 480;
 
-#include "libudph/GUI/Application.h"
+//#include "libudph/GUI/Application.h"
 //#include "libudph/GUI/Window.h"
 //#include "libudph/Math/Tensor.h"
 
-void t(int s)
-{
-  std::cout << s << std::endl;
-}
-struct s
-{
-  void operator()(char s, int)
-  {
-    std::cout << s << std::endl;
-  }
-};
+//void t(int s)
+//{
+//  std::cout << s << std::endl;
+//}
+//struct s
+//{
+//  void operator()(char s, int)
+//  {
+//    std::cout << s << std::endl;
+//  }
+//};
 
 // struct s
 //{
@@ -45,22 +45,22 @@ struct s
 //  };
 int main(int argc, char** argv)
 {
-  UD::Event::Event<char, int> e;
+  //UD::Event::Event<char, int> e;
 
-  UD::Event::Handler<char,int> h;
-  auto               d = [&h,&e](char c, int i)
-  {
-   static int count = 0;
-   count++;
-    h(e,-1);
-   
-    std::cout << c << count << ": " << i << std::endl;
-  };
-  h.Reset(d);
-  h(e,-1);
-  e('c', 2);
-  e('c', 2);
-  e('c', 2);
+  //UD::Event::Handler<char,int> h;
+  //auto               d = [&h,&e](char c, int i)
+  //{
+  // static int count = 0;
+  // count++;
+  //  h(e,-1);
+  // 
+  //  std::cout << c << count << ": " << i << std::endl;
+  //};
+  //h.Reset(d);
+  //h(e,-1);
+  //e('c', 2);
+  //e('c', 2);
+  //e('c', 2);
   //   return App(argc, argv).Run();
   //
   //   SDL_Window*  window        = nullptr;
